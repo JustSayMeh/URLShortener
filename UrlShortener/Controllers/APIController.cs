@@ -15,13 +15,15 @@ namespace UrlShortener.Controllers
     [Route("[controller]/[action]")]
     public class APIController : Controller
     {
+        private readonly string prefix = "X";
         private readonly string salt = "HkdfdjAler\\dsf";
         private readonly int hash_size = 7;
+        private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
         private readonly SQLiteDbContext db = new SQLiteDbContext();
         private Regex regex = new Regex(@"^((https:)|(http:)\/\/)?[а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$");
         public JsonResult Create(string q) 
         {
-            Hashids hashids = new Hashids(salt, hash_size);
+            Hashids hashids = new Hashids(salt, hash_size, alphabet58);
             Match m = regex.Match(q);
             if (!m.Success)
             {
@@ -39,9 +41,9 @@ namespace UrlShortener.Controllers
                 Link url = new Link(q, hash);
                 db.Add(url);
                 db.SaveChanges();
-                return Json(new Response(hash, q));
+                return Json(new Response(prefix + hash, q));
             }
-            return Json(new Response(flink.Short, flink.Original));
+            return Json(new Response(prefix + flink.Short, flink.Original));
         }
     }
 }

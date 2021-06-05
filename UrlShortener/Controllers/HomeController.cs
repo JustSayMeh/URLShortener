@@ -16,7 +16,7 @@ namespace UrlShortener.Controllers
             return View("Views/Home/Index.cshtml");
         }
 
-        [HttpGet("/{shorturl}")]
+        [HttpGet("/X{shorturl}")]
         public RedirectResult generatedLinks(string shorturl)
         {
             Link link = db.Links.FirstOrDefault(i => i.Short.Equals(shorturl));
