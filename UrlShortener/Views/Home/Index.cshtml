@@ -58,7 +58,7 @@
     <div id ="app" class="body_class">
         <form class="form_class">
             <div v-if="empty_url" class="error_block_class">Input URL!</div>
-            <div v-if="invalid_url" class="info-block">Invalid URL!</div>
+            <div v-if="invalid_url" class="error_block_class">Invalid URL!</div>
             <input class="inputurl_class" type="text" id="input_url" v-model="input_url" />
             <button v-on:click="button_click" class="button_class">Short!</button>
         </form> 
@@ -91,7 +91,7 @@
                     var target_url = this.input_url.toLowerCase();
                     this.empty_url = false;
                     this.invalid_url = false;
-                    this.show_info_block = false;
+                 
                     if (target_url == null || target_url == 0) {
                         this.empty_url = true;
                         return;
@@ -100,7 +100,7 @@
                         this.invalid_url = true;
                         return;
                     }
-                    
+                    this.show_info_block = false;
                     let response = await fetch("/api/create?q=" + target_url);
                     if (response.ok) {
                         let jsonText = await response.text();
