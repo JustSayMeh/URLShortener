@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .body_class {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .form_class {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 500px;
+            margin-bottom: 200px;
+        }
+
+        .header_class {
+            height: 50px;
+            border-bottom: 1px solid red;
+            margin-bottom: 100px;
+        }
+
+        .button_class {
+            width: 25%;
+            padding: 5px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .inputurl_class {
+            width: 75%;
+            padding: 3px;
+            font-size: 20px;
+        }
+        .error_block_class {
+            color: red;
+        }
+        .info_block_class {
+            border-top: 1px solid red;
+            border-bottom: 1px solid red;
+            width: 98%;
+            padding: 5px 10px;
+            font-size:20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header_class">
+        HEADER
+    </div>
+    <div id ="app" class="body_class">
+        <form class="form_class">
+            <div v-if="empty_url" class="error_block_class">Input URL!</div>
+            <div v-if="invalid_url" class="info-block">Invalid URL!</div>
+            <input class="inputurl_class" type="text" id="input_url" v-model="input_url" />
+            <button v-on:click="button_click" class="button_class">Short!</button>
+        </form> 
+        <div v-if="show_info_block" class="info_block_class">
+            <h3>Your short link:</h3>
+            <a v-bind:href="short_link" target="_blank">{{short_link}}</a>
+            <p>Your shortened link goes to: {{original_link}}</p>
+        </div>
+    </div>
+
+    <script contextmenu="text/babel">
+        var url_check_regex = /^((https:)|(http:)\/\/)?[а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$/;
+        var host = window.location.host;
+        var protocol = window.location.protocol;
+        const app = new Vue({
+            el: '#app',
+            data: {
+                empty_url: false,
+                invalid_url: false,
+                input_url: null,
+                show_info_block: false,
+                short_link: "",
+                more_information: "",
+                original_link: "",
+            },
+            methods: {
+                button_click: async function (e) {
+                    e.preventDefault();
+   
+                    var target_url = this.input_url.toLowerCase();
+                    this.empty_url = false;
+                    this.invalid_url = false;
+                    this.show_info_block = false;
+                    if (target_url == null || target_url == 0) {
+                        this.empty_url = true;
+                        return;
+                    }
+                    if (target_url.match(url_check_regex) == null) {
+                        this.invalid_url = true;
+                        return;
+                    }
+                    
+                    let response = await fetch("/api/create?q=" + target_url);
+                    if (response.ok) {
+                        let jsonText = await response.text();
+                        let jsonObj = JSON.parse(jsonText);
+                        this.show_info_block = true;
+                        this.short_link = protocol + "//" + host + "/" + jsonObj.m1;
+                        this.original_link = jsonObj.m2;
+                    }
+
+                  
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
