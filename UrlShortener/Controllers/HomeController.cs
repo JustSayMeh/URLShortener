@@ -17,7 +17,7 @@ namespace UrlShortener.Controllers
         }
 
         [HttpGet("/{shorturl}")]
-        public RedirectResult Pipa(string shorturl)
+        public RedirectResult generatedLinks(string shorturl)
         {
             Link link = db.Links.FirstOrDefault(i => i.Short.Equals(shorturl));
             if (link == null)
