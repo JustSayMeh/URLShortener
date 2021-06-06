@@ -20,7 +20,7 @@
         </form>
         <div v-if="show_info_block" class="info_block_class">
             <h3>Your short link:</h3>
-            <h4>{{short_link}}</h4>
+            <a :href="short_link" target="_blank">{{short_link}}</a>
             <p>Your shortened link goes to: {{original_link}}</p>
         </div>
         <div v-if="show_error_block" class="info_block_class">
