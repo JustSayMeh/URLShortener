@@ -17,6 +17,7 @@ namespace UrlShortener
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // подключаем mvc
             services.AddMvc();
         }
 
@@ -27,12 +28,13 @@ namespace UrlShortener
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            // инициализация бд
             using (var db = new SQLiteDbContext())
             {
                 db.Database.EnsureCreated();
                 db.Database.Migrate();
             }
+            // дефолтные вызовы для мапинга реквестов
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
