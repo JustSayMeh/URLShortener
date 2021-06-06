@@ -19,7 +19,7 @@ namespace UrlShortener.Controllers
         private readonly string prefix = "X";
         private readonly string salt = "HkdfdjAler\\dsf";
         private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
-        private Regex regex = new Regex(@"^((https:)|(http:)\/\/)?[а-яa-z0-9_][а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$");
+        private Regex regex = new Regex(@"^((https:|http:)\/\/)?([а-яa-z0-9_-]+)(\.[а-яa-z0-9_-]+)+(\/[а-яa-z0-9_%-\.]*)*(\?[а-яa-z0-9_%-\.=]*)?$");
         private readonly SQLiteDbContext db = new SQLiteDbContext();
         public JsonResult Create(string q) 
         {

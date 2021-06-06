@@ -20,8 +20,12 @@
         </form>
         <div v-if="show_info_block" class="info_block_class">
             <h3>Your short link:</h3>
-            <a v-bind:href="short_link" target="_blank">{{short_link}}</a>
+            <h4>{{short_link}}</h4>
             <p>Your shortened link goes to: {{original_link}}</p>
+        </div>
+        <div v-if="show_error_block" class="info_block_class">
+            <h3 style="color: red;">oops something went wrong</h3>
+            <p>{{short_link}}</p>
         </div>
     </div>
     <script>
@@ -33,7 +37,7 @@
         }
     </script>
     <script contextmenu="text/babel">
-        var url_check_regex = /^((https:)|(http:)\/\/)?[а-яa-z0-9_][а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$/;
+        var url_check_regex = /^((https:|http:)\/\/)?([а-яa-z0-9_-]+)(\.[а-яa-z0-9_-]+)+(\/[а-яa-z0-9_%-\.]*)*(\?[а-яa-z0-9_%-\.=]*)?$/;
         var host = window.location.host;
         var protocol = window.location.protocol;
         const app = new Vue({
@@ -43,6 +47,7 @@
                 invalid_url: false,
                 input_url: null,
                 show_info_block: false,
+                show_error_block: false,
                 short_link: "",
                 more_information: "",
                 original_link: "",
@@ -54,7 +59,8 @@
                     var target_url = this.input_url.toLowerCase();
                     this.empty_url = false;
                     this.invalid_url = false;
-
+                    this.show_error_block = false;
+                    this.show_info_block = false;
                     if (target_url == null || target_url == 0) {
                         this.empty_url = true;
                         return;
@@ -73,6 +79,12 @@
                         this.original_link = jsonObj.m2;
                         var cookie = getCookie("links");
                         document.cookie = "links=" + cookie + "&" + jsonObj.m1.substring(1);
+                    }
+                    else {
+                        let jsonText = await response.text();
+                        let jsonObj = JSON.parse(jsonText);
+                        this.show_error_block = true;
+                        this.short_link = jsonObj.m1;
                     }
                 }
             }
