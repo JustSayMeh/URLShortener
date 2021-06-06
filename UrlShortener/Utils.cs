@@ -8,6 +8,11 @@ namespace UrlShortener
 {
     public class Utils
     {
+        /// <summary>
+        /// Метод возвращает протокол с хостом
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static string GetRequestURLHead(HttpRequest request)
         {
             string domainName = request.Host.Value;

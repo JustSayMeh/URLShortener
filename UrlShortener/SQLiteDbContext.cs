@@ -39,5 +39,13 @@ namespace UrlShortener
             optionsBuilder.UseSqlite(connection);
         }
 
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Link>(entity => {
+                entity.HasIndex(e => e.Short).IsUnique();
+            });
+        }
+
     }
 }

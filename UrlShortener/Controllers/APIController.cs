@@ -18,11 +18,13 @@ namespace UrlShortener.Controllers
         private readonly int hash_size = 7;
         private readonly string prefix = "X";
         private readonly string salt = "HkdfdjAler\\dsf";
+        // base58 алфавит без символов в верхнем регистре
         private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
         private Regex regex = new Regex(@"^((https:|http:)\/\/)?([а-яa-z0-9_-]+)(\.[а-яa-z0-9_-]+)+(\/[а-яa-z0-9_%-\.]*)*(\?[а-яa-z0-9_%-\.=#]*)?$");
         private readonly SQLiteDbContext db = new SQLiteDbContext();
         public JsonResult Create(string q) 
         {
+            // валидация переданного url
             Hashids hashids = new Hashids(salt, hash_size, alphabet58);
             Match m = regex.Match(q);
             if (!m.Success)
@@ -30,19 +32,22 @@ namespace UrlShortener.Controllers
                 this.HttpContext.Response.StatusCode = 400;
                 return Json(new Response("invalid link", ""));
             }
-
+            // так как ссылки без http допустимы, то проверяем его наличие и добавляем в случае отсутствия
             if (m.Groups[1].Length == 0)
                 q = "https://" + q;
+            // удаляем www для однородности ссылок
             q = q.Replace("://www.", "://");
+            // Получаем доменное имя с протоколом
             string domainName = Utils.GetRequestURLHead(HttpContext.Request);
+            // получаем ссылку из бд
             Link flink = db.Links.FirstOrDefault(it => it.Original.Equals(q));
+            // Если ссылка не найдена, то создаем её и добавляем в бд
             if (flink == null)
             {
                 string hash = hashids.EncodeLong(db.Links.Count() + 1);
                 Link url = new Link(q, hash);
                 db.Add(url);
                 db.SaveChanges();
-
                 return Json(new Response(domainName + "/" + prefix + hash, q));
             }
             return Json(new Response(domainName + "/" + prefix + flink.Short, flink.Original));

@@ -38,8 +38,7 @@
     </script>
     <script contextmenu="text/babel">
         var url_check_regex = /^((https:|http:)\/\/)?([а-яa-z0-9_-]+)(\.[а-яa-z0-9_-]+)+(\/[а-яa-z0-9_%-\.]*)*(\?[а-яa-z0-9_%-\.=#]*)?$/;
-        var host = window.location.host;
-        var protocol = window.location.protocol;
+        // инициализация vuejs
         const app = new Vue({
             el: '#app',
             data: {
@@ -55,8 +54,9 @@
             methods: {
                 button_click: async function (e) {
                     e.preventDefault();
-
+                    // переводим в нижний регистр
                     var target_url = this.input_url.toLowerCase();
+                    // снимаем условия видимости компонентов
                     this.empty_url = false;
                     this.invalid_url = false;
                     this.show_error_block = false;
@@ -70,14 +70,17 @@
                         return;
                     }
                     this.show_info_block = false;
+                    // делаем асинхронный запрос к бекенду
                     let response = await fetch("/api/create?q=" + target_url);
                     if (response.ok) {
+                        // получаем ответ и парсим json
                         let jsonText = await response.text();
                         let jsonObj = JSON.parse(jsonText);
                         this.show_info_block = true;
                         this.short_link = jsonObj.m1;
                         this.original_link = jsonObj.m2;
                         var cookie = getCookie("links");
+                        // устанавливаем куки для отображения раздела links
                         document.cookie = "links=" + cookie + "&" + jsonObj.m1.substring(1);
                     }
                     else {
