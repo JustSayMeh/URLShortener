@@ -15,15 +15,14 @@ namespace UrlShortener.Controllers
     [Route("[controller]/[action]")]
     public class APIController : Controller
     {
+        private readonly int hash_size = 7;
         private readonly string prefix = "X";
         private readonly string salt = "HkdfdjAler\\dsf";
-        private readonly int hash_size = 7;
         private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
+        private Regex regex = new Regex(@"^((https:)|(http:)\/\/)?[а-яa-z0-9_][а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$");
         private readonly SQLiteDbContext db = new SQLiteDbContext();
-        private Regex regex = new Regex(@"^((https:)|(http:)\/\/)?[а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$");
         public JsonResult Create(string q) 
         {
-            string cookies = "";
             Hashids hashids = new Hashids(salt, hash_size, alphabet58);
             Match m = regex.Match(q);
             if (!m.Success)
@@ -35,6 +34,7 @@ namespace UrlShortener.Controllers
             if (m.Groups[1].Length == 0)
                 q = "https://" + q;
             q = q.Replace("://www.", "://");
+            string domainName = Utils.GetRequestURLHead(HttpContext.Request);
             Link flink = db.Links.FirstOrDefault(it => it.Original.Equals(q));
             if (flink == null)
             {
@@ -43,9 +43,9 @@ namespace UrlShortener.Controllers
                 db.Add(url);
                 db.SaveChanges();
 
-                return Json(new Response(prefix + hash, q));
+                return Json(new Response(domainName + "/" + prefix + hash, q));
             }
-            return Json(new Response(prefix + flink.Short, flink.Original));
+            return Json(new Response(domainName + "/" + prefix + flink.Short, flink.Original));
         }
     }
 }

@@ -19,13 +19,17 @@
             <tr>
                 <td><h2>Original Link</h2></td>
                 <td><h2>Short Link</h2></td>
+                <td><h2>Create Date</h2></td>
+                <td><h2>Last Redirect Time</h2></td>
             </tr>
             @foreach (Link l in Model)
             {
 
             <tr>
                 <td><a href="@l.Original" target="_blank">@l.Original</a></td>
-                <td><a href="@(" /x" + l.Short)" target="_blank">@l.Short</a></td>
+                <td><a href="@(" /x" + l.Short)" target="_blank">@(ViewData["Head"] + "/x" + l.Short)</a></td>
+                <td>@l.CreateDate.ToString()</td>
+                <td>@l.LastRedirectTime.ToString()</td>
             </tr>
             }
         </table>

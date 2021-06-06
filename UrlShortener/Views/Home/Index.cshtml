@@ -12,6 +12,7 @@
     }
     <div id="app" class="body_class">
         <form class="form_class">
+            <h3>Input your url to short it:</h3>
             <div v-if="empty_url" class="error_block_class">Input URL!</div>
             <div v-if="invalid_url" class="error_block_class">Invalid URL!</div>
             <input class="inputurl_class" type="text" id="input_url" v-model="input_url" />
@@ -32,7 +33,7 @@
         }
     </script>
     <script contextmenu="text/babel">
-        var url_check_regex = /^((https:)|(http:)\/\/)?[а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$/;
+        var url_check_regex = /^((https:)|(http:)\/\/)?[а-яa-z0-9_][а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$/;
         var host = window.location.host;
         var protocol = window.location.protocol;
         const app = new Vue({
@@ -68,7 +69,7 @@
                         let jsonText = await response.text();
                         let jsonObj = JSON.parse(jsonText);
                         this.show_info_block = true;
-                        this.short_link = protocol + "//" + host + "/" + jsonObj.m1;
+                        this.short_link = jsonObj.m1;
                         this.original_link = jsonObj.m2;
                         var cookie = getCookie("links");
                         document.cookie = "links=" + cookie + "&" + jsonObj.m1.substring(1);

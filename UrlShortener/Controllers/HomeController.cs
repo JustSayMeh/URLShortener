@@ -22,8 +22,10 @@ namespace UrlShortener.Controllers
         {
             string cookies = "";
             HttpContext.Request.Cookies.TryGetValue("links", out cookies);
+            string domainName = Utils.GetRequestURLHead(HttpContext.Request);
             List<Link> links = db.Links.Where(p => cookies.Contains(p.Short)).ToList();
             ViewData["Active"] = "links";
+            ViewData["Head"] = domainName;
             return View("Views/Links/LinksPage.cshtml", links); 
         }
 
@@ -33,6 +35,9 @@ namespace UrlShortener.Controllers
             Link link = db.Links.FirstOrDefault(i => i.Short.Equals(shorturl));
             if (link == null)
                 return Redirect("/");
+            link.LastRedirectTime = DateTime.Now;
+            db.Links.Update(link);
+            db.SaveChanges();
             return Redirect(link.Original);
         }
     }

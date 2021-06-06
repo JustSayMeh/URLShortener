@@ -12,11 +12,21 @@ namespace UrlShortener
         public int Id { get; set; }
         public string Short { get; set; }
         public string Original { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime LastRedirectTime { get; set; }
         public Link() { }
         public Link(string link, string shorty)
         {
             this.Original = link;
             this.Short = shorty;
+            CreateDate = DateTime.Now;
+
+        }
+        public Link(string link, string shorty, DateTime date)
+        {
+            this.Original = link;
+            this.Short = shorty;
+            CreateDate = date;
         }
     }
     public class SQLiteDbContext : DbContext
