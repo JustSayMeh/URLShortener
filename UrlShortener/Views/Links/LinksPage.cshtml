@@ -1,0 +1,34 @@
+﻿@using UrlShortener
+@model List<Link>
+<Link>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div style="padding: 10px;">
+        @{
+            Layout = "header";
+        }
+        <h1 style="margin-bottom: 10px;">My recently shortened URLs</h1>
+        <table>
+            <tr>
+                <td><h2>Original Link</h2></td>
+                <td><h2>Short Link</h2></td>
+            </tr>
+            @foreach (Link l in Model)
+            {
+
+            <tr>
+                <td><a href="@l.Original" target="_blank">@l.Original</a></td>
+                <td><a href="@(" /x" + l.Short)" target="_blank">@l.Short</a></td>
+            </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

@@ -23,6 +23,7 @@ namespace UrlShortener.Controllers
         private Regex regex = new Regex(@"^((https:)|(http:)\/\/)?[а-яa-z0-9_\/%\-]+(\.[а-яa-z%\-]+)+(\/[а-яa-z0-9_\/%\-\.]*)?(\?[а-яa-z0-9_\/%\&=\-\.\!]*)?$");
         public JsonResult Create(string q) 
         {
+            string cookies = "";
             Hashids hashids = new Hashids(salt, hash_size, alphabet58);
             Match m = regex.Match(q);
             if (!m.Success)
@@ -33,7 +34,7 @@ namespace UrlShortener.Controllers
 
             if (m.Groups[1].Length == 0)
                 q = "https://" + q;
-            
+            q = q.Replace("://www.", "://");
             Link flink = db.Links.FirstOrDefault(it => it.Original.Equals(q));
             if (flink == null)
             {
@@ -41,6 +42,7 @@ namespace UrlShortener.Controllers
                 Link url = new Link(q, hash);
                 db.Add(url);
                 db.SaveChanges();
+
                 return Json(new Response(prefix + hash, q));
             }
             return Json(new Response(prefix + flink.Short, flink.Original));

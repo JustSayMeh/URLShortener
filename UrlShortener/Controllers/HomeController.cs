@@ -13,7 +13,18 @@ namespace UrlShortener.Controllers
         [HttpGet("/")]
         public ActionResult Index()
         {
+            ViewData["Active"] = "main";
             return View("Views/Home/Index.cshtml");
+        }
+
+        [HttpGet("/links")]
+        public ActionResult Links()
+        {
+            string cookies = "";
+            HttpContext.Request.Cookies.TryGetValue("links", out cookies);
+            List<Link> links = db.Links.Where(p => cookies.Contains(p.Short)).ToList();
+            ViewData["Active"] = "links";
+            return View("Views/Links/LinksPage.cshtml", links); 
         }
 
         [HttpGet("/X{shorturl}")]

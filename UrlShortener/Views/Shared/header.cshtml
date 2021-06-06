@@ -1,0 +1,107 @@
+﻿<style>
+    body {
+        background-color: #fffef7;
+        padding: 0px;
+        margin: 0px;
+    }
+
+
+    .header_class {
+        border-bottom: 2px solid #8A0808;
+        box-shadow: 0px 2px 10px black;
+        margin-bottom: 50px;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    h2 {
+        margin: 0px;
+    }
+
+    .body_class {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .form_class {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 500px;
+        margin-bottom: 200px;
+    }
+
+
+    .button_class {
+        width: 25%;
+        padding: 5px;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+
+    .inputurl_class {
+        width: 75%;
+        padding: 3px;
+        font-size: 20px;
+    }
+
+    .error_block_class {
+        color: red;
+    }
+
+    .info_block_class {
+        border-top: 1px solid #8A0808;
+        border-bottom: 1px solid #8A0808;
+        width: 98%;
+        padding: 5px 10px;
+        font-size: 20px;
+    }
+    .a_menu_class {
+        margin-left: 10px;
+        margin-right: 10px;
+        color: #8A0808;
+        font-size: 20px;
+        text-decoration: none;
+    }
+    .a_menu_class:hover {
+            color: #591a1a;
+    }
+        
+    .active_a_class {
+            color: black;
+    }
+</style>
+<div class="header_class">
+    <div style="display: flex; flex-direction:row; justify-content: flex-end; width: 100%;">
+        @if (ViewData["Active"].Equals("main"))
+        {
+            <a class="a_menu_class active_a_class" href="/">Main</a>
+        }
+        else
+        {
+            <a class="a_menu_class" href="/">Main</a>
+        }
+        @if (ViewData["Active"].Equals("links"))
+        {
+            <a class="a_menu_class active_a_class" href="/links">Links</a>
+        }
+        else
+        {
+                <a class="a_menu_class" href="/links">Links</a>
+
+        }
+        @if (ViewData["Active"].Equals("about"))
+        {
+            <a class="a_menu_class active_a_class" href="/">About</a>
+        }
+        else
+        {
+            <a class="a_menu_class" href="/">About</a>
+        }
+    </div>
+</div>
+@RenderBody()

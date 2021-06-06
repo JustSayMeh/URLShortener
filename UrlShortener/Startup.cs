@@ -33,8 +33,6 @@ namespace UrlShortener
                 db.Database.EnsureCreated();
                 db.Database.Migrate();
             }
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

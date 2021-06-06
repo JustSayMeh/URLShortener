@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Home\htmlpage.cshtml" />
     <Content Remove="Views\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Links\LinksPage.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
   </ItemGroup>
 
