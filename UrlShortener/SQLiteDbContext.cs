@@ -20,7 +20,6 @@ namespace UrlShortener
             this.Original = link;
             this.Short = shorty;
             CreateDate = DateTime.Now;
-
         }
         public Link(string link, string shorty, DateTime date)
         {

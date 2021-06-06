@@ -27,9 +27,18 @@
 
             <tr>
                 <td><a href="@l.Original" target="_blank">@l.Original</a></td>
-                <td><a href="@(" /x" + l.Short)" target="_blank">@(ViewData["Head"] + "/x" + l.Short)</a></td>
+                <td><p href="@(" /x" + l.Short)" target="_blank">@(ViewData["Head"] + "/x" + l.Short)</p></td>
                 <td>@l.CreateDate.ToString()</td>
+
+                @if(l.LastRedirectTime == DateTime.MinValue)
+                {
+                <td>No Redirects</td>
+                }
+                else
+                {
                 <td>@l.LastRedirectTime.ToString()</td>
+                }
+
             </tr>
             }
         </table>
