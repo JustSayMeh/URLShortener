@@ -37,7 +37,7 @@
         }
     </script>
     <script contextmenu="text/babel">
-        var url_check_regex = /^((https:|http:)\/\/)?([а-яa-z0-9_-]+)(\.[а-яa-z0-9_-]+)+(\/[а-яa-z0-9_%-\.]*)*(\?[а-яa-z0-9_%-\.=#]*)?$/;
+        var url_check_regex = /^(?:http(s)?:\/\/)?[а-яА-ЯA-Za-z0-9_.-]+(?:\.[а-яА-ЯA-Za-z0-9_\.-]+)+[а-яА-ЯA-Za-z0-9_\-\._~:\/?#[\]@@!\$&'\(\)\*\+,;=.]+$/;
         // инициализация vuejs
         const app = new Vue({
             el: '#app',
@@ -54,8 +54,7 @@
             methods: {
                 button_click: async function (e) {
                     e.preventDefault();
-                    // переводим в нижний регистр
-                    var target_url = this.input_url.toLowerCase();
+                    var target_url = this.input_url;
                     // снимаем условия видимости компонентов
                     this.empty_url = false;
                     this.invalid_url = false;
@@ -71,7 +70,14 @@
                     }
                     this.show_info_block = false;
                     // делаем асинхронный запрос к бекенду
-                    let response = await fetch("/api/create?q=" + target_url);
+                    var req = {}
+                    req.url = target_url;
+                    let response = await fetch("/api/create", {
+                        method: 'POST',
+                        body: JSON.stringify(req),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        } });
                     if (response.ok) {
                         // получаем ответ и парсим json
                         let jsonText = await response.text();
