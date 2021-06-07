@@ -26,8 +26,14 @@ namespace UrlShortener.Controllers
         private Regex regex = new Regex(@"^(?:http(s)?:\/\/)?([а-яА-ЯA-Za-z0-9_.-]+(?:\.[а-яА-ЯA-Za-z0-9_\.-]+))+[а-яА-ЯA-Za-z0-9_\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.%]+$");
         private readonly SQLiteDbContext db = new SQLiteDbContext();
         [HttpPost]
+        // FromBody - чтобы обработать аргументы тела запроса
         public JsonResult Create([FromBody] URLRequest q1) 
         {
+            if (q1 == null)
+            {
+                this.HttpContext.Response.StatusCode = 400;
+                return Json(new Response("invalid request", ""));
+            }
             string q = q1.url;
             // валидация переданного url
             Hashids hashids = new Hashids(salt, hash_size, alphabet58);
