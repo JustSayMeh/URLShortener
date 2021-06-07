@@ -23,7 +23,7 @@ namespace UrlShortener.Controllers
         private readonly string salt = "HkdfdjAler\\dsf";
         // base58 алфавит без символов в верхнем регистре
         private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
-        private Regex regex = new Regex(@"^(?:http(s)?:\/\/)?([а-яА-ЯA-Za-z0-9_.-]+(?:\.[а-яА-ЯA-Za-z0-9_\.-]+))+[а-яА-ЯA-Za-z0-9_\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$");
+        private Regex regex = new Regex(@"^(?:http(s)?:\/\/)?([а-яА-ЯA-Za-z0-9_.-]+(?:\.[а-яА-ЯA-Za-z0-9_\.-]+))+[а-яА-ЯA-Za-z0-9_\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.%]+$");
         private readonly SQLiteDbContext db = new SQLiteDbContext();
         [HttpPost]
         public JsonResult Create([FromBody] URLRequest q1) 
