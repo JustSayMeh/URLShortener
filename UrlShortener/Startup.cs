@@ -35,6 +35,7 @@ namespace UrlShortener
                 db.Database.Migrate();
             }
             // дефолтные вызовы для мапинга реквестов
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

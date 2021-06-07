@@ -1,0 +1,38 @@
+﻿@using UrlShortener
+@model string
+<Link>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <style>
+        h1, h3 {
+            margin: 5px 0px;
+            align-content: center;
+            text-align: center;
+        }
+        a {
+            text-align: center;
+        }
+    </style>
+    <div style="padding: 10px; display: flex; flex-direction: row; justify-content:center;">
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            @if (Model.Equals("404"))
+            {
+                <h1>Page not found</h1>
+                <h3>Your link is not valid</h3>
+            }
+            else
+            {
+                <h1>Oops something went wrong</h1>
+            }
+            <a href="/">to main page</a>
+        </div>
+    </div>
+</body>
+</html>

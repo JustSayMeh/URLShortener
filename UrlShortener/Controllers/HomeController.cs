@@ -26,7 +26,7 @@ namespace UrlShortener.Controllers
             List<Link> links = db.Links.Where(p => cookies.Contains(p.Short)).ToList();
             ViewData["Active"] = "links";
             ViewData["Head"] = domainName;
-            return View("Views/Links/LinksPage.cshtml", links); 
+            return View("Views/Links/LinksPage.cshtml", links);
         }
 
         [HttpGet("/X{shorturl}")]
@@ -34,11 +34,17 @@ namespace UrlShortener.Controllers
         {
             Link link = db.Links.FirstOrDefault(i => i.Short.Equals(shorturl));
             if (link == null)
-                return Redirect("/");
+                return Redirect("/error?code=404");
             link.LastRedirectTime = DateTime.Now;
             db.Links.Update(link);
             db.SaveChanges();
             return Redirect(link.Original);
+        }
+
+        [HttpGet("/error")]
+        public ActionResult error(string code)
+        {
+            return View("Views/Error/Error.cshtml", code);
         }
     }
 }
