@@ -9,7 +9,9 @@ namespace UrlShortener.Controllers
     [Route("/")]
     public class HomeController : Controller
     {
-        private readonly SQLiteDbContext db = new SQLiteDbContext();
+        private readonly SQLiteDbContext db;
+        public HomeController(SQLiteDbContext db) => this.db = db;
+        
         [HttpGet("/")]
         public ActionResult Index()
         {

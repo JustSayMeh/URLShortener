@@ -19,21 +19,20 @@ namespace UrlShortener
         {
             // подключаем mvc
             services.AddMvc();
+            services.AddTransient<SQLiteDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SQLiteDbContext db)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             // инициализация бд
-            using (var db = new SQLiteDbContext())
-            {
-                db.Database.EnsureCreated();
-                db.Database.Migrate();
-            }
+            db.Database.EnsureCreated();
+            db.Database.Migrate();
+            
             // дефолтные вызовы для мапинга реквестов
             app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
             app.UseRouting();

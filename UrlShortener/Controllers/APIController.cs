@@ -24,7 +24,9 @@ namespace UrlShortener.Controllers
         // base58 алфавит без символов в верхнем регистре
         private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
         private Regex regex = new Regex(@"^(?:http(s)?:\/\/)?([а-яА-ЯA-Za-z0-9_.-]+(?:\.[а-яА-ЯA-Za-z0-9_\.-]+))+[а-яА-ЯA-Za-z0-9_\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.%]+$");
-        private readonly SQLiteDbContext db = new SQLiteDbContext();
+
+        private readonly SQLiteDbContext db;
+        public APIController(SQLiteDbContext db) => this.db = db;
         [HttpPost]
         // FromBody - чтобы обработать аргументы тела запроса
         public JsonResult Create([FromBody] URLRequest q1) 
