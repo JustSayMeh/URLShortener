@@ -19,7 +19,7 @@ namespace UrlShortener
         {
             // подключаем mvc
             services.AddMvc();
-            services.AddTransient<SQLiteDbContext>();
+            services.AddSingleton<SQLiteDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
