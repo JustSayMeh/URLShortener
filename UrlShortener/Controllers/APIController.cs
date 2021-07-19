@@ -15,56 +15,28 @@ namespace UrlShortener.Controllers
     {
         public string url { get; set; }
     }
+
     [Route("[controller]/[action]")]
-    public class APIController : Controller
+    public partial class APIController : Controller
     {
-        private readonly int hash_size = 7;
-        private readonly string prefix = "X";
-        private readonly string salt = "HkdfdjAler\\dsf";
-        // base58 алфавит без символов в верхнем регистре
-        private readonly string alphabet58 = "123456789abcdefghijkmnopqrstuvwxyz";
         private readonly SQLiteDbContext db;
         public APIController(SQLiteDbContext db) => this.db = db;
+        private string original_url;
+
         [HttpPost]
-        // FromBody - чтобы обработать аргументы тела запроса
-        public JsonResult Create([FromBody] URLRequest q1) 
+        public JsonResult Create([FromBody] URLRequest request_url_argument) 
         {
-            if (q1 == null)
-            {
-                this.HttpContext.Response.StatusCode = 400;
-                return Json(new Response("invalid request", ""));
-            }
-            string q = q1.url;
-            // валидация переданного url
-            Hashids hashids = new Hashids(salt, hash_size, alphabet58);
-            if (!q.Contains("http"))
-                q = "https://" + q;
+            if (IsArgumentEmpty(request_url_argument))
+                ProvideErrorResponseWithCode400("invalid request");
+            SetOriginalUrlFromRequest(request_url_argument);
+            CheckAndAddHttpsPrefix();
             try
             {
-                Uri uri = new Uri(q);
-                // получить хост
-                string domain = uri.Host;
-                // удаляем www для однородности ссылок
-                q = q.Replace(domain, domain.ToLower()).Replace("://www.", "://");
-                // Получаем доменное имя с протоколом
-                string domainName = Utils.GetRequestURLHead(HttpContext.Request);
-                // получаем ссылку из бд
-                Link flink = db.Links.FirstOrDefault(it => it.Original.Equals(q));
-                // Если ссылка не найдена, то создаем её и добавляем в бд
-                if (flink == null)
-                {
-                    string hash = hashids.EncodeLong(db.Links.Count() + 1);
-                    Link url = new Link(q, hash);
-                    db.Add(url);
-                    db.SaveChanges();
-                    return Json(new Response(domainName + "/" + prefix + hash, q));
-                }
-                return Json(new Response(domainName + "/" + prefix + flink.Short, flink.Original));
+                return ShortenUrlAndProvideOkResponse();
             }
             catch(UriFormatException e)
             {
-                this.HttpContext.Response.StatusCode = 400;
-                return Json(new Response("invalid link", ""));
+                return ProvideErrorResponseWithCode400("invalid link");
             }
         }
     }
